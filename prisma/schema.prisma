@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customers {
+  customerId                 String     @id @default(cuid())
+  customerLastName           String
+  customerFirstName          String
+  customerAddress            String
+  customerCity               String
+  customerState              String
+  customerZip                String
+  customerPhone              String
+  customerCell               String
+  customerWorkPhone          String
+  customerDriverLicense      String
+  customerDriverLicenseState String
+  Cars                       Cars[]
+  Invoices                   Invoices[]
+}
+
+model Cars {
+  carId                String     @id @default(cuid())
+  customerIdentifierId String
+  customerIdentifier   Customers  @relation(fields: [customerIdentifierId], references: [customerId])
+  carModel             String
+  carMake              String
+  carYear              Int
+  carEngineSize        Int
+  carVIN               String
+  carOdometerIn        Int
+  carOdometerOut       Int
+  carLicensePlate      String
+  carTireSize          String
+  Invoices             Invoices[]
+}
+
+model Invoices {
+  invoiceId              String          @id @default(cuid())
+  invoiceDate            DateTime
+  invoiceNumber          String          @unique
+  customerIdenId         String
+  customerIden           Customers       @relation(fields: [customerIdenId], references: [customerId])
+  customerCarId          String
+  customerCar            Cars            @relation(fields: [customerCarId], references: [carId])
+  serviceRequest         String
+  partsOrderId           String
+  partsOrder             PartsOrderEntry @relation(fields: [partsOrderId], references: [partsOrderEntryId])
+  extededPriceinCents    Int
+  commercialPriceInCents Int
+  differencePriceInCents Int
+  differenceTotalInCents Int
+  LaborHourlyRateInCents Int
+  LaborDescription       String
+  LaborHours             Int
+  LaborTotalCostInCents  Int
+  invoiceDiscountInCents Int
+  taxInPercentage        Float
+  taxInCents             Int
+  subTotalInCents        Int
+  invoiceTotalInCents    Int
+  amountPaidInCents      Int
+  balanceDueInCents      Int
+  paymentType            PaymentCategory @default(CASH)
+}
+
+model PartsOrderEntry {
+  partsOrderEntryId String     @id @default(cuid())
+  saleDate          DateTime
+  partStore         String
+  skuNumber         String
+  description       String
+  listPriceInCents  Int
+  costPriceInCents  Int
+  quantity          Int
+  custLastName      String
+  custFirstName     String
+  totalPriceInCents Int
+  Invoices          Invoices[]
+}
+
+enum PaymentCategory {
+  CASH
+  CHECK
+  CREDIT_CARD
+  DEBIT_CARD
+  COMPANY_ACCOUNT
+}
