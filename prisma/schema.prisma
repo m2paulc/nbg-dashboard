@@ -49,7 +49,7 @@ model Cars {
 model Invoices {
   invoiceId              String          @id @default(cuid())
   invoiceDate            DateTime
-  invoiceNumber          String          @unique
+  invoiceNumber          String          @unique @default(uuid())
   customerIdenId         String
   customerIden           Customers       @relation(fields: [customerIdenId], references: [customerId])
   customerCarId          String
