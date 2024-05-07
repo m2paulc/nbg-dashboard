@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Customers {
-  customerId                 String     @id @default(cuid())
+  customerId                 String            @id @default(cuid())
   customerLastName           String
   customerFirstName          String
   customerAddress            String
@@ -28,6 +28,7 @@ model Customers {
   customerDriverLicenseState String
   Cars                       Cars[]
   Invoices                   Invoices[]
+  PartsOrderEntrys           PartsOrderEntry[]
 }
 
 model Cars {
@@ -47,16 +48,16 @@ model Cars {
 }
 
 model Invoices {
-  invoiceId              String          @id @default(cuid())
-  invoiceDate            DateTime
-  invoiceNumber          String          @unique @default(uuid())
+  invoiceId              String           @id @default(cuid())
+  invoiceDate            DateTime         @default(now())
+  invoiceNumber          String           @unique @default(uuid())
   customerIdenId         String
-  customerIden           Customers       @relation(fields: [customerIdenId], references: [customerId])
+  customerIden           Customers        @relation(fields: [customerIdenId], references: [customerId])
   customerCarId          String
-  customerCar            Cars            @relation(fields: [customerCarId], references: [carId])
+  customerCar            Cars             @relation(fields: [customerCarId], references: [carId])
   serviceRequest         String
-  partsOrderId           String
-  partsOrder             PartsOrderEntry @relation(fields: [partsOrderId], references: [partsOrderEntryId])
+  partsOrderId           String?
+  partsOrder             PartsOrderEntry? @relation(fields: [partsOrderId], references: [partsOrderEntryId])
   extededPriceinCents    Int
   commercialPriceInCents Int
   differencePriceInCents Int
@@ -72,21 +73,24 @@ model Invoices {
   invoiceTotalInCents    Int
   amountPaidInCents      Int
   balanceDueInCents      Int
-  paymentType            PaymentCategory @default(CASH)
+  paymentType            PaymentCategory  @default(CASH)
+  updatedAt              DateTime         @updatedAt
 }
 
 model PartsOrderEntry {
   partsOrderEntryId String     @id @default(cuid())
   saleDate          DateTime
   partStore         String
-  skuNumber         String
+  skuNumber         String     @unique
   description       String
   listPriceInCents  Int
   costPriceInCents  Int
   quantity          Int
-  custLastName      String
-  custFirstName     String
+  customerOrderId   String?
+  customer          Customers? @relation(fields: [customerOrderId], references: [customerId])
   totalPriceInCents Int
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
   Invoices          Invoices[]
 }
 
