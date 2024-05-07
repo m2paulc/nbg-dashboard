@@ -11,7 +11,7 @@ import clsx from "clsx";
 
 // list of objects for each link
 const links = [
-	{ name: "Home", href: "/", icon: HomeIcon },
+	{ name: "Home", href: "/dashboard", icon: HomeIcon },
 	{
 		name: "Invoices",
 		href: "/dashboard/invoices",
