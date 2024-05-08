@@ -23,7 +23,7 @@ export default function LatestInvoices({
 									"border-t": index !== 0,
 								})}
 							>
-								<div className="flex flex-row justify-between">
+								<div className="flex flex-row items-center justify-between">
 									<div className="flex flex-row gap-4 justify-between">
 										<p className="text-sm font-medium md:text-base">
 											{invoice.invoiceDate.toDateString()}
@@ -36,14 +36,20 @@ export default function LatestInvoices({
 									<p
 										className={`${lusitana.className} text-sm font-semibold md:text-base`}
 									>
-										{invoice.invoiceTotalInCents}
+										{invoice.amount}
 									</p>
 								</div>
-								<div className="flex flex-row gap-8">
+								<div className="flex flex-row items-center justify-between">
 									<div className="flex flex-row gap-2 justify-between">
 										<p>{`${invoice.customerCar.carMake} - `}</p>
 										<p>{`${invoice.customerCar.carModel} - `}</p>
 										<p>{invoice.customerCar.carYear}</p>
+									</div>
+									<div className="flex flex-row gap-1">
+										<p className="text-sm">License Plate: </p>
+										<p className="text-sm">
+											{invoice.customerCar.carLicensePlate}
+										</p>
 									</div>
 									<p className="text-sm font-medium md:text-base">
 										{invoice.serviceRequest}

@@ -13,6 +13,7 @@ export type LatestInvoicesType = {
 	invoiceDate: Date;
 	invoiceTotalInCents: number;
 	serviceRequest: string;
+	amount: string;
 	customerIdenId: string;
 	customerIden: {
 		customerId: string;
