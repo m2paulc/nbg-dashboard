@@ -2,6 +2,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { lusitana } from "@/app/ui/fonts";
 import { LatestInvoicesType } from "@/app/lib/definitions";
+import { formatDatetoLocal } from "@/app/lib/utils";
 
 export default function LatestInvoices({
 	latestInvoices,
@@ -26,9 +27,9 @@ export default function LatestInvoices({
 								<div className="flex flex-row items-center justify-between">
 									<div className="flex flex-row gap-4 justify-between">
 										<p className="text-sm font-medium md:text-base">
-											{invoice.invoiceDate.toDateString()}
+											{formatDatetoLocal(invoice.invoiceDate)}
 										</p>
-										<p className="text-sm">{invoice.invoiceNumber}</p>
+										<p className="text-sm">{`INV#: ${invoice.invoiceNumber}`}</p>
 										<p className="text-sm font-medium md:text-base">
 											{`${invoice.customerIden.customerLastName}  ${invoice.customerIden.customerFirstName}`}
 										</p>
