@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { lusitana } from "@/app/ui/fonts";
 import { LatestInvoicesType } from "@/app/lib/definitions";
 import { formatDatetoLocal } from "@/app/lib/utils";
+import InvoiceStatus from "@/app/ui/invoices/invStatus";
 
 export default function LatestInvoices({
 	latestInvoices,
@@ -39,6 +40,7 @@ export default function LatestInvoices({
 									>
 										{invoice.amount}
 									</p>
+									<InvoiceStatus status={invoice.status} />
 								</div>
 								<div className="flex flex-row items-center justify-between">
 									<div className="flex flex-row gap-2 justify-between">

@@ -75,6 +75,7 @@ model Invoices {
   balanceDueInCents      Int
   paymentType            PaymentCategory  @default(CASH)
   updatedAt              DateTime         @updatedAt
+  status                 statusType       @default(PENDING)
 }
 
 model PartsOrderEntry {
@@ -100,4 +101,10 @@ enum PaymentCategory {
   CREDIT_CARD
   DEBIT_CARD
   COMPANY_ACCOUNT
+}
+
+enum statusType {
+  PENDING
+  PAID
+  CANCELLED
 }

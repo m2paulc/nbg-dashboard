@@ -14,6 +14,7 @@ export type LatestInvoicesType = {
 	invoiceTotalInCents: number;
 	serviceRequest: string;
 	amount: string;
+	status: "PENDING" | "PAID" | "CANCELLED";
 	customerIdenId: string;
 	customerIden: {
 		customerId: string;
