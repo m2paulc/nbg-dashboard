@@ -42,7 +42,4 @@ export type LatestInvoicesType = {
 		carLicensePlate: string;
 		carTireSize: string;
 	};
-	partsOrder: {
-		partsOrderId: string;
-	} | null;
 };

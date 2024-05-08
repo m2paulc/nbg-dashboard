@@ -1,15 +1,9 @@
 import { lusitana } from "@/app/ui/fonts";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
 import { fetchLatestInvoices } from "@/app/lib/data";
-import { LatestInvoicesType } from "@/app/lib/definitions";
 
 async function Page() {
-	const latestInvoices = (await fetchLatestInvoices()).map((invoice) => ({
-		...invoice,
-		partsOrder: invoice.partsOrder
-			? { partsOrderId: invoice.partsOrder.partsOrderEntryId }
-			: null,
-	}));
+	const latestInvoices = await fetchLatestInvoices();
 
 	return (
 		<main>
