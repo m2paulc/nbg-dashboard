@@ -47,3 +47,60 @@ export async function fetchLatestInvoices() {
 		throw new Error("Failed to get latest invoices");
 	}
 }
+
+export async function fetchCardData() {
+	noStore();
+
+	try {
+		const invoiceCountPromise = await prisma.invoices.count();
+		const customerCountPromise = await prisma.customers.count();
+		const pendingInvoicesPromise = await prisma.invoices.aggregate({
+			where: {
+				status: "PENDING",
+			},
+			_sum: {
+				invoiceTotalInCents: true,
+			},
+		});
+		const collectedInvoicesPromise = await prisma.invoices.aggregate({
+			where: {
+				status: "PAID",
+			},
+			_sum: {
+				invoiceTotalInCents: true,
+			},
+		});
+
+		const data = await Promise.all([
+			invoiceCountPromise,
+			customerCountPromise,
+			pendingInvoicesPromise,
+			collectedInvoicesPromise,
+		]);
+
+		const numberOfInvoices = Number(data[0] ?? "0");
+		const numberOfCustomers = Number(data[1] ?? "0");
+		const totalPendingInvoices = formatCurrency(
+			data[2]._sum.invoiceTotalInCents ?? 0
+		);
+		const totalPaidInvoices = formatCurrency(
+			data[3]._sum.invoiceTotalInCents ?? 0
+		);
+
+		console.log(
+			numberOfInvoices,
+			numberOfCustomers,
+			totalPendingInvoices,
+			totalPaidInvoices
+		);
+		return {
+			numberOfInvoices,
+			numberOfCustomers,
+			totalPendingInvoices,
+			totalPaidInvoices,
+		};
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to get card data");
+	}
+}
