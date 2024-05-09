@@ -40,7 +40,7 @@ export async function fetchLatestInvoices() {
 			...invoice,
 			amount: formatCurrency(invoice.invoiceTotalInCents),
 		}));
-		console.log(latestInvoices);
+		// console.log(latestInvoices);
 		return latestInvoices;
 	} catch (error) {
 		console.error("Database Error: ", error);
