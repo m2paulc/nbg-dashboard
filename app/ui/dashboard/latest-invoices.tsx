@@ -4,12 +4,11 @@ import { lusitana } from "@/app/ui/fonts";
 import { LatestInvoicesType } from "@/app/lib/definitions";
 import { formatDatetoLocal } from "@/app/lib/utils";
 import InvoiceStatus from "@/app/ui/invoices/invStatus";
+import { fetchLatestInvoices } from "@/app/lib/data";
 
-export default function LatestInvoices({
-	latestInvoices,
-}: {
-	latestInvoices: LatestInvoicesType[];
-}) {
+export default async function LatestInvoices() {
+	const latestInvoices = await fetchLatestInvoices();
+
 	return (
 		<div className="flex w-full flex-col md:col-span-full">
 			<h2 className={`${lusitana.className} mb-4 text-lg md:text-xl`}>
