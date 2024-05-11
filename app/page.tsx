@@ -2,6 +2,11 @@ import Link from "next/link";
 import styles from "@/app/ui/home.module.css";
 import { lusitana } from "@/app/ui/fonts";
 import { ArrowRightIcon, LightBulbIcon } from "@heroicons/react/24/outline";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Dashboard",
+};
 
 export default function Home() {
 	return (

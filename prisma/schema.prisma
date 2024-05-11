@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Customers {
-  customerId                 String            @id @default(cuid())
+  customerId                 String            @id @default(uuid())
   customerLastName           String
   customerFirstName          String
   customerAddress            String
@@ -48,9 +48,9 @@ model Cars {
 }
 
 model Invoices {
-  invoiceId              String           @id @default(cuid())
+  invoiceId              String           @id @default(uuid())
   invoiceDate            DateTime         @default(now())
-  invoiceNumber          String           @unique @default(uuid())
+  invoiceNumber          String           @unique @default(cuid())
   customerIdenId         String
   customerIden           Customers        @relation(fields: [customerIdenId], references: [customerId])
   customerCarId          String
@@ -81,7 +81,7 @@ model Invoices {
 model PartsOrderEntry {
   partsOrderEntryId String     @id @default(cuid())
   saleDate          DateTime
-  partStore         String
+  partStore         String?
   skuNumber         String     @unique
   description       String
   listPriceInCents  Int

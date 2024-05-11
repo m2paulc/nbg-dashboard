@@ -1,7 +1,9 @@
 import prisma from "@/db";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { formatCurrency } from "./utils";
+import { formatCurrency, checkStatus, formatDatetoLocal } from "./utils";
+
+const ITEMS_PER_PAGE = 10;
 
 export async function fetchAllInvoices() {
 	noStore();
@@ -20,6 +22,96 @@ export async function fetchAllInvoices() {
 	}
 	revalidatePath("/dashboard/invoices");
 	redirect("/dashboard/invoices");
+}
+
+export async function fetchFilteredInvoices(query: string) {
+	noStore();
+
+	// const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+	// const startsWithLetter = /^[a-zA-Z]/.test(query);
+	const startsWithNumber = /^\d/.test(query);
+
+	let whereDate = {};
+	let whereStatus = {};
+	if (query) {
+		if (startsWithNumber) {
+			whereDate = { invoiceDate: { gte: new Date(query) } };
+		}
+
+		if (query === "pending" || query === "canceled" || query === "paid") {
+			const statusQ = checkStatus(query);
+			whereStatus = { status: { equals: statusQ } };
+		}
+	}
+
+	try {
+		const data = await prisma.invoices.findMany({
+			where: {
+				OR: [
+					{ serviceRequest: { contains: query, mode: "insensitive" } },
+					{ LaborDescription: { contains: query, mode: "insensitive" } },
+					whereDate,
+					whereStatus,
+					{
+						customerIden: {
+							customerLastName: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerFirstName: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerAddress: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerDriverLicense: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerCar: {
+							carLicensePlate: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerCar: { carMake: { contains: query, mode: "insensitive" } },
+					},
+					{
+						customerCar: { carModel: { contains: query, mode: "insensitive" } },
+					},
+					{ customerCar: { carVIN: { contains: query, mode: "insensitive" } } },
+				],
+			},
+			orderBy: { invoiceDate: "desc" },
+			take: ITEMS_PER_PAGE,
+			skip: 0,
+			include: {
+				customerIden: true,
+				customerCar: true,
+			},
+		});
+		const filteredInvoices = data.map((invoice) => ({
+			id: invoice.invoiceId,
+			invoiceNumber: invoice.invoiceNumber,
+			name: `${invoice.customerIden.customerFirstName} ${invoice.customerIden.customerLastName}`,
+			service: invoice.serviceRequest,
+			laborDesc: invoice.LaborDescription,
+			date: formatDatetoLocal(invoice.invoiceDate),
+			amount: formatCurrency(invoice.invoiceTotalInCents),
+			status: invoice.status,
+			vehicle: `${invoice.customerCar.carMake}-${invoice.customerCar.carModel}-${invoice.customerCar.carYear}`,
+			vehicleLic: invoice.customerCar.carLicensePlate,
+		}));
+		console.log(filteredInvoices);
+		return filteredInvoices;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to fetch filtered invoices.");
+	}
 }
 
 export async function fetchLatestInvoices() {
@@ -102,5 +194,60 @@ export async function fetchCardData() {
 	} catch (error) {
 		console.error("Database Error: ", error);
 		throw new Error("Failed to get card data");
+	}
+}
+
+export async function fetchInvoicesPages(query: string) {
+	noStore();
+
+	const statusQ = checkStatus(query);
+
+	try {
+		const count = await prisma.invoices.count({
+			where: {
+				OR: [
+					{
+						customerIden: {
+							customerLastName: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerFirstName: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerAddress: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerIden: {
+							customerDriverLicense: { contains: query, mode: "insensitive" },
+						},
+					},
+					// { status: { equals: statusQ } },
+					// { invoiceDate: { gte: formattedDate } },
+					{ LaborDescription: { contains: query, mode: "insensitive" } },
+					{
+						customerCar: {
+							carLicensePlate: { contains: query, mode: "insensitive" },
+						},
+					},
+					{
+						customerCar: { carMake: { contains: query, mode: "insensitive" } },
+					},
+					{
+						customerCar: { carModel: { contains: query, mode: "insensitive" } },
+					},
+				],
+			},
+		});
+		// console.log(count);
+		const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
+		return totalPages;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to fetch total number of invoices.");
 	}
 }

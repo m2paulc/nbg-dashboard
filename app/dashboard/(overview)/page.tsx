@@ -4,7 +4,7 @@ import CardWrapper from "@/app/ui/dashboard/cards";
 import { Suspense } from "react";
 import { CardsSkeleton, LatestInvoicesSkeleton } from "@/app/ui/skeletons";
 
-async function Page() {
+function Page() {
 	return (
 		<main>
 			<h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
