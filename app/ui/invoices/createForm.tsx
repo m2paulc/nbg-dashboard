@@ -2,6 +2,7 @@
 
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 import { CustomerWithCars } from "@/app/lib/definitions";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import { createInvoice } from "@/app/lib/actions";
@@ -24,6 +25,9 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 	// const { state, dispatch } = useFormState(createInvoice, initialState);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [openSelect, setOpenSelect] = useState(false);
+	const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
+	const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
+	const router = useRouter();
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const searchTerm = e.target.value;
@@ -31,6 +35,16 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 		if (searchTerm.length > 0) {
 			setOpenSelect(true);
 		}
+	};
+
+	const handleCustomerChange = (customerId: string) => {
+		const customer = customers.find((cust) => cust.id === customerId);
+		setSelectedCustomer(customer?.id || null);
+		router.push(`?[${customerId}]`, undefined);
+	};
+
+	const handleVehicleChange = (vehicleId: string) => {
+		setSelectedVehicle(vehicleId);
 	};
 
 	return (
@@ -54,6 +68,7 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 							id="customer"
 							name="customerId"
 							defaultValue=""
+							onChange={(e) => handleCustomerChange(e.target.value)}
 							className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
 							aria-describedby="customer-error"
 						>
@@ -88,24 +103,29 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 						Choose vehicle
 					</label>
 					<div className="relative">
-						<select
-							id="vehicle"
-							name="carId"
-							className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-							defaultValue=""
-							aria-describedby="customer-error"
-						>
-							<option value="" disabled>
-								Select a vehicle
-							</option>
-							{customers.map((customer) =>
-								customer.Cars.map((car) => (
-									<option key={car.carId} value={car.carId}>
-										{`${car.carMake}-${car.carModel}-${car.carYear}-${car.carLicensePlate}`}
-									</option>
-								))
-							)}
-						</select>
+						{selectedCustomer && (
+							<select
+								id="vehicle"
+								name="carId"
+								onChange={(e) => handleVehicleChange(e.target.value)}
+								className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+								defaultValue=""
+								aria-describedby="customer-error"
+							>
+								<option value="" disabled>
+									Select a vehicle
+								</option>
+								{customers
+									.filter((customer) => customer.id === selectedCustomer)
+									.map((customer) =>
+										customer.Cars.map((car) => (
+											<option key={car.carId} value={car.carId}>
+												{`${car.carMake}-${car.carModel}-${car.carYear}-${car.carLicensePlate}`}
+											</option>
+										))
+									)}
+							</select>
+						)}
 						<CameraIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
 					</div>
 					{/* <div id="customer-error" aria-live="polite" aria-atomic="true">

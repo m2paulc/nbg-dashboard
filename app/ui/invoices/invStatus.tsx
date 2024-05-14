@@ -9,7 +9,7 @@ function InvoiceStatus({ status }: { status: string }) {
 				{
 					"bg-orange-400 text-slate-100": status === "PENDING",
 					"bg-green-500 text-white": status === "PAID",
-					"bg-red-500 text-white": status === "CANCELLED",
+					"bg-red-500 text-white": status === "CANCELED",
 				}
 			)}
 		>
@@ -25,9 +25,9 @@ function InvoiceStatus({ status }: { status: string }) {
 					<CheckIcon className="ml-1 w-4 text-white" />
 				</>
 			) : null}
-			{status === "CANCELLED" ? (
+			{status === "CANCELED" ? (
 				<>
-					Cancelled
+					Canceled
 					<XCircleIcon className="ml-1 w-4 text-white" />
 				</>
 			) : null}

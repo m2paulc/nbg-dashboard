@@ -13,7 +13,7 @@ export type Invoice = {
 		| "CREDIT_CARD"
 		| "DEBIT_CARD"
 		| "COMPANY_ACCOUNT";
-	status: "PENDING" | "PAID" | "CANCELLED";
+	status: "PENDING" | "PAID" | "CANCELED";
 };
 
 export type LatestInvoicesType = {
@@ -22,7 +22,7 @@ export type LatestInvoicesType = {
 	invoiceTotalInCents: number;
 	serviceRequest: string;
 	amount: string;
-	status: "PENDING" | "PAID" | "CANCELLED";
+	status: "PENDING" | "PAID" | "CANCELED";
 	customerIdenId: string;
 	customerIden: Customer;
 	customerCarId: string;

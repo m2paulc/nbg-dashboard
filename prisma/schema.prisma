@@ -106,5 +106,5 @@ enum PaymentCategory {
 enum statusType {
   PENDING
   PAID
-  CANCELLED
+  CANCELED
 }
