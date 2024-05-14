@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, useRef, useState, useEffect } from "react";
 import { CustomerWithCars } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -27,6 +27,7 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 	const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
 	const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
 	const router = useRouter();
+	const textareaRef = useRef(null);
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const searchTerm = e.target.value;
@@ -45,6 +46,15 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 	const handleVehicleChange = (vehicleId: string) => {
 		setSelectedVehicle(vehicleId);
 	};
+
+	useEffect(() => {
+		if (textareaRef.current) {
+			(textareaRef.current as HTMLTextAreaElement).focus();
+			(textareaRef.current as HTMLTextAreaElement).selectionStart = (
+				textareaRef.current as HTMLTextAreaElement
+			).selectionEnd = 10;
+		}
+	}, []);
 
 	return (
 		<form action={createInvoice}>
@@ -98,35 +108,41 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 
 				{/* Vehicles */}
 				<div className="mb-4">
-					<label htmlFor="vehicle" className="mb-2 block text-sm font-medium">
-						Choose vehicle
-					</label>
-					<div className="relative">
-						{selectedCustomer && (
-							<select
-								id="vehicle"
-								name="carId"
-								onChange={(e) => handleVehicleChange(e.target.value)}
-								className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-								defaultValue=""
-								aria-describedby="customer-error"
+					{selectedCustomer && (
+						<>
+							<label
+								htmlFor="vehicle"
+								className="mb-2 block text-sm font-medium"
 							>
-								<option value="" disabled>
-									Select a vehicle
-								</option>
-								{customers
-									.filter((customer) => customer.id === selectedCustomer)
-									.map((customer) =>
-										customer.Cars.map((car) => (
-											<option key={car.carId} value={car.carId}>
-												{`${car.carMake}-${car.carModel}-${car.carYear}-${car.carLicensePlate}`}
-											</option>
-										))
-									)}
-							</select>
-						)}
-						<CameraIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-					</div>
+								Choose vehicle
+							</label>
+							<div className="relative">
+								<select
+									id="vehicle"
+									name="carId"
+									onChange={(e) => handleVehicleChange(e.target.value)}
+									className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 
+                  placeholder:text-gray-500"
+									defaultValue=""
+									aria-describedby="customer-error"
+								>
+									<option value="" disabled>
+										Select a vehicle
+									</option>
+									{customers
+										.filter((customer) => customer.id === selectedCustomer)
+										.map((customer) =>
+											customer.Cars.map((car) => (
+												<option key={car.carId} value={car.carId}>
+													{`${car.carMake}-${car.carModel}-${car.carYear}-${car.carLicensePlate}`}
+												</option>
+											))
+										)}
+								</select>
+								<CameraIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+							</div>
+						</>
+					)}
 					{/* <div id="customer-error" aria-live="polite" aria-atomic="true">
             {state.errors?.customerId &&
               state.errors.customerId.map((error: string) => (
@@ -145,6 +161,7 @@ export default function Form({ customers }: { customers: CustomerWithCars[] }) {
 					<textarea
 						id="service"
 						name="service"
+						ref={textareaRef}
 						rows={3}
 						cols={100}
 						className="w-full resize"
