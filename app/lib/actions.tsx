@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "@/db";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -6,14 +8,19 @@ import { z } from "zod";
 const FormSchema = z.object({
 	id: z.string(),
 	customerId: z.string({ invalid_type_error: "Please select a customer" }),
+	carId: z.string({ invalid_type_error: "Please select a car" }),
 	amount: z.coerce
 		.number()
 		.gt(0, { message: "Please enter an amount greater than 0" }),
-	status: z.enum(["CANCELED", "PENDING", "PAID"], {
+	status: z.enum(["CANCELLED", "PENDING", "PAID"], {
 		invalid_type_error: "Please select an invoice status",
 	}),
 	date: z.string(),
 	serviceReq: z.string(),
+	paymentType: z.enum(
+		["CASH", "CHECK", "CREDIT_CARD", "DEBIT_CARD", "COMPANY_ACCOUNT"],
+		{ invalid_type_error: "Please select a payment type" }
+	),
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
@@ -22,27 +29,57 @@ const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 export type State = {
 	errors?: {
 		customerId?: string[];
+		carId?: string[];
 		amount?: string[];
 		status?: string[];
+		paymentType?: string[];
+		serviceReq?: string[];
 	};
 	message?: string | null;
 };
 
-export async function createInvoice(prevState: State, formData: FormData) {
+export async function createInvoice(formData: FormData) {
 	noStore();
 
-	const validateFields = CreateInvoice.safeParse({
-		customerId: formData.get("customerId"),
-		amount: formData.get("amount"),
-		status: formData.get("status"),
+	const { customerId, carId, amount, paymentType, status, serviceReq } =
+		CreateInvoice.parse({
+			customerId: formData.get("customerId"),
+			carId: formData.get("carId"),
+			amount: formData.get("amount"),
+			paymentType: formData.get("paymentType"),
+			status: formData.get("status"),
+			serviceReq: formData.get("service"),
+		});
+	const amountInCents = amount * 100;
+
+	const newInvoice = await prisma.invoices.create({
+		data: {
+			customerIdenId: customerId,
+			customerCarId: carId,
+			invoiceTotalInCents: amountInCents,
+			paymentType,
+			status,
+			serviceRequest: serviceReq,
+		},
 	});
 
-	if (!validateFields.success) {
-		return {
-			errors: validateFields.error.flatten().fieldErrors,
-			message: "Failed to Create Invoice. Please fill out all required fields",
-		};
-	}
+	// if (!validateFields.success) {
+	// 	return {
+	// 		errors: validateFields.error.flatten().fieldErrors,
+	// 		message: "Failed to Create Invoice. Please fill out all required fields",
+	// 	};
+	// }
+
+	// const rawFormData = {
+	// 	customerId: formData.get("customerId"),
+	// 	carId: formData.get("carId"),
+	// 	amount: formData.get("amount"),
+	// 	payment: formData.get("paymentType"),
+	// 	status: formData.get("status"),
+	// 	serviceReq: formData.get("service"),
+	// };
+	// Test it out:
+	// console.log(rawFormData);
 
 	revalidatePath("/dashboard/invoices");
 	redirect("/dashboard/invoices");

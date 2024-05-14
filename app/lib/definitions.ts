@@ -3,9 +3,17 @@ export type Invoice = {
 	customerId: string;
 	customerLastName: string;
 	customerFirstName: string;
+	serviceRequest: string;
+	carId: string;
 	date: string;
 	amount: number;
-	status: "pending" | "paid" | "cancelled";
+	paymentType:
+		| "CASH"
+		| "CHECK"
+		| "CREDIT_CARD"
+		| "DEBIT_CARD"
+		| "COMPANY_ACCOUNT";
+	status: "PENDING" | "PAID" | "CANCELLED";
 };
 
 export type LatestInvoicesType = {
@@ -16,32 +24,50 @@ export type LatestInvoicesType = {
 	amount: string;
 	status: "PENDING" | "PAID" | "CANCELLED";
 	customerIdenId: string;
-	customerIden: {
-		customerId: string;
-		customerLastName: string;
-		customerFirstName: string;
-		customerAddress: string;
-		customerCity: string;
-		customerState: string;
-		customerZip: string;
-		customerPhone: string;
-		customerCell: string;
-		customerWorkPhone: string;
-		customerDriverLicense: string;
-		customerDriverLicenseState: string;
-	};
+	customerIden: Customer;
 	customerCarId: string;
-	customerCar: {
-		carId: string;
-		customerIdentifierId: string;
-		carModel: string;
-		carMake: string;
-		carYear: number;
-		carEngineSize: number;
-		carVIN: string;
-		carOdometerIn: number;
-		carOdometerOut: number;
-		carLicensePlate: string;
-		carTireSize: string;
-	};
+	customerCar: Car;
 };
+
+export type Customer = {
+	customerId: string;
+	customerLastName: string;
+	customerFirstName: string;
+	customerAddress: string;
+	customerCity: string;
+	customerState: string;
+	customerZip: string;
+	customerPhone: string;
+	customerCell: string;
+	customerWorkPhone: string;
+	customerDriverLicense: string;
+	customerDriverLicenseState: string;
+};
+
+export interface CustomerWithCars {
+	id: string;
+	name: string;
+	Cars: CarProp[];
+}
+
+export type Car = {
+	carId: string;
+	customerIdentifierId: string;
+	carModel: string;
+	carMake: string;
+	carYear: number;
+	carEngineSize: number;
+	carVIN: string;
+	carOdometerIn: number;
+	carOdometerOut: number;
+	carLicensePlate: string;
+	carTireSize: string;
+};
+interface CarProp {
+	carId: string;
+	customerIdentifierId: string;
+	carModel: string;
+	carMake: string;
+	carYear: number;
+	carLicensePlate: string;
+}

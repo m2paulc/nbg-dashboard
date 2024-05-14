@@ -251,3 +251,62 @@ export async function fetchInvoicesPages(query: string) {
 		throw new Error("Failed to fetch total number of invoices.");
 	}
 }
+
+export async function fetchCustomersWithCars() {
+	noStore();
+
+	try {
+		const customers = await prisma.customers
+			.findMany({
+				orderBy: { customerLastName: "asc" },
+				include: {
+					Cars: true,
+				},
+			})
+			.then((customers) =>
+				customers.flatMap((customer) => ({
+					id: customer.customerId,
+					name: `${customer.customerLastName}, ${customer.customerFirstName}`,
+					Cars: customer.Cars.map(
+						(car) =>
+							({
+								carId: car.carId,
+								carModel: car.carModel,
+								carMake: car.carMake,
+								carYear: car.carYear,
+								carLicensePlate: car.carLicensePlate,
+								customerIdentifierId: car.customerIdentifierId,
+							} = car)
+					),
+				}))
+			);
+
+		// console.log(customers);
+		return customers;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch all customers.");
+	}
+}
+
+export async function fetchVehicles() {
+	noStore();
+
+	try {
+		const data = await prisma.cars.findMany({
+			orderBy: { carMake: "asc" },
+		});
+		const vehicles = data.map((vehicle) => ({
+			id: vehicle.carId,
+			make: vehicle.carMake,
+			model: vehicle.carModel,
+			year: vehicle.carYear,
+			plate: vehicle.carLicensePlate,
+			customerId: vehicle.customerIdentifierId,
+		}));
+		return vehicles;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch all vehicles.");
+	}
+}

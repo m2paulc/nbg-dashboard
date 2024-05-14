@@ -1,0 +1,15 @@
+-- AlterTable
+ALTER TABLE "Invoices" ALTER COLUMN "extededPriceinCents" DROP NOT NULL,
+ALTER COLUMN "commercialPriceInCents" DROP NOT NULL,
+ALTER COLUMN "differencePriceInCents" DROP NOT NULL,
+ALTER COLUMN "differenceTotalInCents" DROP NOT NULL,
+ALTER COLUMN "LaborHourlyRateInCents" DROP NOT NULL,
+ALTER COLUMN "LaborDescription" DROP NOT NULL,
+ALTER COLUMN "LaborHours" DROP NOT NULL,
+ALTER COLUMN "LaborTotalCostInCents" DROP NOT NULL,
+ALTER COLUMN "invoiceDiscountInCents" DROP NOT NULL,
+ALTER COLUMN "taxInPercentage" DROP NOT NULL,
+ALTER COLUMN "taxInCents" DROP NOT NULL,
+ALTER COLUMN "subTotalInCents" DROP NOT NULL,
+ALTER COLUMN "amountPaidInCents" DROP NOT NULL,
+ALTER COLUMN "balanceDueInCents" DROP NOT NULL;

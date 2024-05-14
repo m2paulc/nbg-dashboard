@@ -58,21 +58,21 @@ model Invoices {
   serviceRequest         String
   partsOrderId           String?
   partsOrder             PartsOrderEntry? @relation(fields: [partsOrderId], references: [partsOrderEntryId])
-  extededPriceinCents    Int
-  commercialPriceInCents Int
-  differencePriceInCents Int
-  differenceTotalInCents Int
-  LaborHourlyRateInCents Int
-  LaborDescription       String
-  LaborHours             Int
-  LaborTotalCostInCents  Int
-  invoiceDiscountInCents Int
-  taxInPercentage        Float
-  taxInCents             Int
-  subTotalInCents        Int
+  extededPriceinCents    Int?
+  commercialPriceInCents Int?
+  differencePriceInCents Int?
+  differenceTotalInCents Int?
+  LaborHourlyRateInCents Int?
+  LaborDescription       String?
+  LaborHours             Int?
+  LaborTotalCostInCents  Int?
+  invoiceDiscountInCents Int?
+  taxInPercentage        Float?
+  taxInCents             Int?
+  subTotalInCents        Int?
   invoiceTotalInCents    Int
-  amountPaidInCents      Int
-  balanceDueInCents      Int
+  amountPaidInCents      Int?
+  balanceDueInCents      Int?
   paymentType            PaymentCategory  @default(CASH)
   updatedAt              DateTime         @updatedAt
   status                 statusType       @default(PENDING)
@@ -80,7 +80,7 @@ model Invoices {
 
 model PartsOrderEntry {
   partsOrderEntryId String     @id @default(cuid())
-  saleDate          DateTime
+  saleDate          DateTime?
   partStore         String?
   skuNumber         String     @unique
   description       String
