@@ -106,7 +106,7 @@ export async function fetchFilteredInvoices(query: string) {
 			vehicle: `${invoice.customerCar.carMake}-${invoice.customerCar.carModel}-${invoice.customerCar.carYear}`,
 			vehicleLic: invoice.customerCar.carLicensePlate,
 		}));
-		console.log(filteredInvoices);
+		// console.log(filteredInvoices);
 		return filteredInvoices;
 	} catch (error) {
 		console.error("Database Error:", error);
@@ -179,12 +179,6 @@ export async function fetchCardData() {
 			data[3]._sum.invoiceTotalInCents ?? 0
 		);
 
-		console.log(
-			numberOfInvoices,
-			numberOfCustomers,
-			totalPendingInvoices,
-			totalPaidInvoices
-		);
 		return {
 			numberOfInvoices,
 			numberOfCustomers,
