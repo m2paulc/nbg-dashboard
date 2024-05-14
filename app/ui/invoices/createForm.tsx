@@ -14,7 +14,6 @@ import {
 	UserCircleIcon,
 	MagnifyingGlassIcon,
 	CameraIcon,
-	XCircleIcon,
 	CreditCardIcon,
 	NoSymbolIcon,
 	CheckCircleIcon,

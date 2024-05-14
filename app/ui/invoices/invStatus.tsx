@@ -1,4 +1,8 @@
-import { CheckIcon, ClockIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+	CheckIcon,
+	ClockIcon,
+	NoSymbolIcon,
+} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
 function InvoiceStatus({ status }: { status: string }) {
@@ -28,7 +32,7 @@ function InvoiceStatus({ status }: { status: string }) {
 			{status === "CANCELED" ? (
 				<>
 					Canceled
-					<XCircleIcon className="ml-1 w-4 text-white" />
+					<NoSymbolIcon className="ml-1 w-4 text-white" />
 				</>
 			) : null}
 		</span>
