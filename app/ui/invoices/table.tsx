@@ -1,6 +1,7 @@
 import InvoiceStatus from "./invStatus";
 import { formatDatetoLocal, formatCurrency } from "@/app/lib/utils";
 import { fetchFilteredInvoices } from "@/app/lib/data";
+import { DeleteInvoice, UpdateInvoice } from "@/app/ui/invoices/buttons";
 
 export default async function InvoicesTable({
 	query,
@@ -39,79 +40,80 @@ export default async function InvoicesTable({
 										<InvoiceStatus status={invoice.status} />
 									</div>
 									<div className="flex justify-end gap-2">
-										{/* <UpdateInvoice id={invoice.id} />
-                    <DeleteInvoice id={invoice.id} /> */}
+										<UpdateInvoice id={invoice.id} />
+										<DeleteInvoice id={invoice.id} />
 									</div>
 								</div>
 							</div>
 						))}
 					</div>
-					<table className="hidden w-full text-gray-900 md:table">
-						<thead className="rounded-lg text-left text-sm font-normal">
-							<tr>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Invoice Number
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Customer
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Service
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Car
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Date
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Amount
-								</th>
-								<th scope="col" className="px-3 py-4 font-medium">
-									Status
-								</th>
-								<th scope="col" className="relative py-3 pl-3 pr-3">
-									<span className="sr-only">Edit</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody className="bg-white">
-							{invoices?.map((invoice) => (
-								<tr
-									key={invoice.id}
-									className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-								>
-									<td className="whitespace-nowrap py-3 pr-3 pl-3">
-										<p>{invoice.invoiceNumber}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<p>{invoice.name}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<p>{invoice.service}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<p>{invoice.vehicle}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<p>{invoice.date}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<p>{invoice.amount}</p>
-									</td>
-									<td className="whitespace-nowrap py-3 pr-3">
-										<InvoiceStatus status={invoice.status} />
-									</td>
-									<td className="whitespace-nowrap py-3 pl-6 pr-3">
-										<div className="flex justify-end gap-3">
-											{/* <UpdateInvoice id={invoice.id} />
-											<DeleteInvoice id={invoice.id} /> */}
-										</div>
-									</td>
+					<div className="hidden w-full container p-4 md:block">
+						<table className="hidden w-full text-gray-900 md:table">
+							<thead className="rounded-lg text-left text-sm font-normal">
+								<tr>
+									<th scope="col" className="px-3 py-4 font-medium">
+										<p>Invoice Number</p>
+										<br />
+										<p>Customer</p>
+									</th>
+									<th scope="col" className="px-3 py-4 font-medium">
+										<p>Service</p>
+										<br />
+										<p>Vehicle</p>
+									</th>
+									<th scope="col" className="px-3 py-4 font-medium">
+										Date
+									</th>
+									<th scope="col" className="px-3 py-4 font-medium">
+										Amount
+									</th>
+									<th scope="col" className="px-3 py-4 font-medium">
+										Status
+									</th>
+									<th scope="col" className="relative py-3 pl-3 pr-3">
+										<span className="sr-only">Edit</span>
+									</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody className="bg-white">
+								{invoices?.map((invoice) => (
+									<tr
+										key={invoice.id}
+										className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+									>
+										<td
+											className="truncate text-sm font-medium py-3 pl-3 pr-3"
+											title={invoice.invoiceNumber}
+										>
+											<p>{invoice.invoiceNumber}</p>
+											<br />
+											<p>{invoice.name}</p>
+										</td>
+										<td className="py-3 pr-3 text-sm">
+											<p>{invoice.service}</p>
+											<br />
+											<p>{invoice.vehicle}</p>
+										</td>
+										<td className="py-3 pr-3 font-medium">
+											<p>{invoice.date}</p>
+										</td>
+										<td className="py-3 pr-3">
+											<p>{invoice.amount}</p>
+										</td>
+										<td className="py-3 pr-3">
+											<InvoiceStatus status={invoice.status} />
+										</td>
+										<td className="py-3 pl-6 pr-3">
+											<div className="flex justify-end gap-3">
+												<UpdateInvoice id={invoice.id} />
+												<DeleteInvoice id={invoice.id} />
+											</div>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

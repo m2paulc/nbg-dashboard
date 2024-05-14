@@ -8,11 +8,7 @@ export const formatCurrency = (amount: number) => {
 };
 
 export const formatDatetoLocal = (date: Date) => {
-	return date.toLocaleString("en-US", {
-		month: "short",
-		day: "numeric",
-		year: "numeric",
-	});
+	return date.toLocaleDateString("en-US");
 };
 
 export const checkStatus = (q: string): statusType => {
