@@ -54,9 +54,7 @@ model Invoices {
   customerCar            Cars              @relation(fields: [customerCarId], references: [carId])
   serviceRequest         String
   partsOrderTotalInCents Int?
-  laborHourlyRateInCents Int?
-  laborDescription       String?
-  laborHours             Int?
+  laborHourlyRateInCents Int?               @default(8000)
   laborTotalCostInCents  Int?
   invoiceDiscountInCents Int?
   taxInPercentage        Float?            @default(6.625)
@@ -81,6 +79,8 @@ model PartsOrderEntry {
   costPriceInCents  Int?
   quantity          Int?
   totalPriceInCents Int?
+  laborDescription       String?
+  laborHours             Int?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   Invoices          Invoices[]

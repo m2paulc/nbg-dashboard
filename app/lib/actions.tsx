@@ -16,7 +16,7 @@ const FormSchema = z.object({
 		invalid_type_error: "Please select an invoice status",
 	}),
 	date: z.string(),
-	serviceReq: z.string(),
+	service: z.string(),
 	paymentType: z.enum(
 		["CASH", "CHECK", "CREDIT_CARD", "DEBIT_CARD", "COMPANY_ACCOUNT"],
 		{ invalid_type_error: "Please select a payment type" }
@@ -24,7 +24,15 @@ const FormSchema = z.object({
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const UpdateInvoice = FormSchema.omit({
+	id: true,
+	date: true,
+	customerId: true,
+	carId: true,
+	status: true,
+	paymentType: true,
+	amount: true,
+});
 
 export type State = {
 	errors?: {
@@ -33,7 +41,7 @@ export type State = {
 		amount?: string[];
 		status?: string[];
 		paymentType?: string[];
-		serviceReq?: string[];
+		service?: string[];
 	};
 	message?: string | null;
 };
@@ -41,7 +49,7 @@ export type State = {
 export async function createInvoice(formData: FormData) {
 	noStore();
 
-	const { customerId, carId, amount, paymentType, status, serviceReq } =
+	const { customerId, carId, amount, paymentType, status, service } =
 		CreateInvoice.parse({
 			customerId: formData.get("customerId"),
 			carId: formData.get("carId"),
@@ -59,7 +67,7 @@ export async function createInvoice(formData: FormData) {
 			invoiceTotalInCents: amountInCents,
 			paymentType,
 			status,
-			serviceRequest: serviceReq,
+			serviceRequest: service,
 		},
 	});
 
@@ -87,31 +95,33 @@ export async function createInvoice(formData: FormData) {
 
 export async function updateInvoice(
 	id: string,
-	prevState: State,
+	// prevState: State,
 	formData: FormData
 ) {
-	const validateFields = UpdateInvoice.safeParse({
-		customerId: formData.get("customerId"),
-		amount: formData.get("amount"),
-		status: formData.get("status"),
-		serviceReq: formData.get("serviceRequest"),
+	const { service } = UpdateInvoice.parse({
+		service: formData.get("service"),
 	});
+	// const validateFields = UpdateInvoice.safeParse({
+	// 	amount: formData.get("amount"),
+	// 	status: formData.get("status"),
+	// 	serviceReq: formData.get("serviceRequest"),
+	// });
 
-	if (!validateFields.success) {
-		return {
-			errors: validateFields.error.flatten().fieldErrors,
-			message: "Failed to Update Invoice. Please check all required fields",
-		};
-	}
+	// if (!validateFields.success) {
+	// 	return {
+	// 		errors: validateFields.error.flatten().fieldErrors,
+	// 		message: "Failed to Update Invoice. Please check all required fields",
+	// 	};
+	// }
 
-	const { customerId, amount, status, serviceReq } = validateFields.data;
-	const amountInCents = amount * 100;
-
+	// const { amount, status, serviceReq } = validateFields.data;
+	// const amountInCents = amount * 100;
+	console.log(formData);
 	try {
 		const updateInvoice = await prisma.invoices.update({
 			where: { invoiceId: id },
 			data: {
-				serviceRequest: serviceReq,
+				serviceRequest: service,
 			},
 		});
 	} catch (error) {
