@@ -45,44 +45,44 @@ model Cars {
 }
 
 model Invoices {
-  invoiceId              String            @id @default(uuid())
-  invoiceDate            DateTime          @default(now())
-  invoiceNumber          String            @unique @default(cuid())
+  invoiceId              String           @id @default(uuid())
+  invoiceDate            DateTime         @default(now())
+  invoiceNumber          String           @unique @default(cuid())
   customerIdenId         String
-  customerIden           Customers         @relation(fields: [customerIdenId], references: [customerId])
+  customerIden           Customers        @relation(fields: [customerIdenId], references: [customerId])
   customerCarId          String
-  customerCar            Cars              @relation(fields: [customerCarId], references: [carId])
+  customerCar            Cars             @relation(fields: [customerCarId], references: [carId])
   serviceRequest         String
   partsOrderTotalInCents Int?
-  laborHourlyRateInCents Int?               @default(8000)
+  laborHourlyRateInCents Int              @default(8000)
   laborTotalCostInCents  Int?
   invoiceDiscountInCents Int?
-  taxInPercentage        Float?            @default(6.625)
+  taxInPercentage        Float            @default(6.625)
   taxInCents             Int?
   subTotalInCents        Int?
   invoiceTotalInCents    Int
   amountPaidInCents      Int?
   balanceDueInCents      Int?
-  paymentType            PaymentCategory   @default(CASH)
-  updatedAt              DateTime          @updatedAt
-  status                 statusType        @default(PENDING)
-  partsId String?
-  parts PartsOrderEntry? @relation(fields: [partsId], references: [partsOrderEntryId])
+  paymentType            PaymentCategory  @default(CASH)
+  updatedAt              DateTime         @updatedAt
+  status                 statusType       @default(PENDING)
+  partsId                String?
+  parts                  PartsOrderEntry? @relation(fields: [partsId], references: [partsOrderEntryId])
 }
 
 model PartsOrderEntry {
-  partsOrderEntryId String    @id @default(cuid())
+  partsOrderEntryId String     @id @default(cuid())
   partStore         String?
-  skuNumber         String?   @unique
+  skuNumber         String?    @unique
   description       String?
   listPriceInCents  Int?
   costPriceInCents  Int?
   quantity          Int?
   totalPriceInCents Int?
-  laborDescription       String?
-  laborHours             Int?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  laborDescription  String?
+  laborHours        Int?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
   Invoices          Invoices[]
 }
 
