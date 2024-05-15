@@ -4,6 +4,7 @@ import {
 	fetchInvoiceById,
 	fetchCustomerById,
 	fetchCustomerCarsById,
+	fetchPartsOrderById,
 } from "@/app/lib/data";
 
 async function Page({ params }: { params: { id: string } }) {
@@ -11,6 +12,13 @@ async function Page({ params }: { params: { id: string } }) {
 	const invoice = await fetchInvoiceById(id);
 	const customer = await fetchCustomerById(invoice!.customerIdenId);
 	const vehicle = await fetchCustomerCarsById(invoice!.customerCarId);
+	const partsOrder = (await fetchPartsOrderById(id)) || {
+		partStore: "",
+		skuNumber: "",
+		description: "",
+		quantity: 0,
+		listPriceInCents: 0,
+	};
 	return (
 		<main>
 			<Breadcrumbs
@@ -23,7 +31,12 @@ async function Page({ params }: { params: { id: string } }) {
 					},
 				]}
 			/>
-			<Form invoice={invoice} customer={customer} vehicle={vehicle} />
+			<Form
+				invoice={invoice}
+				customer={customer}
+				vehicle={vehicle}
+				partsOrder={partsOrder}
+			/>
 		</main>
 	);
 }

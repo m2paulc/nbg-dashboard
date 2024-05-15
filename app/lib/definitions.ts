@@ -62,6 +62,14 @@ export type VehicleForm = {
 	carVIN: string;
 };
 
+export type PartsOrderForm = {
+	partStore: string;
+	skuNumber: string;
+	description: string;
+	quantity: number;
+	listPriceInCents: number;
+};
+
 export type Customer = {
 	customerId: string;
 	customerLastName: string;

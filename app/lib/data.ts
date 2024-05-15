@@ -48,9 +48,6 @@ export async function fetchFilteredInvoices(query: string) {
 			where: {
 				OR: [
 					{ serviceRequest: { contains: query, mode: "insensitive" } },
-					{ laborDescription: { contains: query, mode: "insensitive" } },
-					whereDate,
-					whereStatus,
 					{
 						customerIden: {
 							customerLastName: { contains: query, mode: "insensitive" },
@@ -98,7 +95,6 @@ export async function fetchFilteredInvoices(query: string) {
 			invoiceNumber: invoice.invoiceNumber,
 			name: `${invoice.customerIden.customerFirstName} ${invoice.customerIden.customerLastName}`,
 			service: invoice.serviceRequest,
-			laborDesc: invoice.laborDescription,
 			date: formatDatetoLocal(invoice.invoiceDate),
 			amount: formatCurrency(invoice.invoiceTotalInCents),
 			status: invoice.status,
@@ -221,7 +217,6 @@ export async function fetchInvoicesPages(query: string) {
 					},
 					// { status: { equals: statusQ } },
 					// { invoiceDate: { gte: formattedDate } },
-					{ laborDescription: { contains: query, mode: "insensitive" } },
 					{
 						customerCar: {
 							carLicensePlate: { contains: query, mode: "insensitive" },
@@ -317,8 +312,6 @@ export async function fetchInvoiceById(id: string) {
 				serviceRequest: true,
 				customerCarId: true,
 				partsId: true,
-				laborDescription: true,
-				laborHours: true,
 				invoiceTotalInCents: true,
 				paymentType: true,
 				status: true,

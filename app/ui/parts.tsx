@@ -10,7 +10,6 @@ async function PartsOrder({ id }: { id: string }) {
 		listPriceInCents: 0,
 	};
 	const formattedPrice = formatCurrency(Number(partsOrder.listPriceInCents));
-
 	return (
 		<div className="flex flex-col gap-4 w-full md:flex-row md:gap-8">
 			<div className="w-2/12 mb-4">

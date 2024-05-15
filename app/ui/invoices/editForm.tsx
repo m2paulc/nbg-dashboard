@@ -14,8 +14,13 @@ import {
 	NoSymbolIcon,
 	CheckCircleIcon,
 } from "@heroicons/react/24/outline";
-import { CustomerForm, InvoiceForm, VehicleForm } from "@/app/lib/definitions";
-import { formatDatetoLocalString } from "@/app/lib/utils";
+import {
+	CustomerForm,
+	InvoiceForm,
+	PartsOrderForm,
+	VehicleForm,
+} from "@/app/lib/definitions";
+import { formatCurrency, formatDatetoLocalString } from "@/app/lib/utils";
 import PartsOrder from "@/app/ui/parts";
 import { updateInvoice } from "@/app/lib/actions";
 
@@ -23,12 +28,15 @@ export default function EditInvoiceForm({
 	invoice,
 	customer,
 	vehicle,
+	partsOrder,
 }: {
 	invoice: InvoiceForm;
 	customer: CustomerForm;
 	vehicle: VehicleForm;
+	partsOrder: PartsOrderForm;
 }) {
 	const updateInvoiceWithId = updateInvoice.bind(null, invoice.invoiceId);
+	const formattedPrice = formatCurrency(Number(partsOrder.listPriceInCents));
 
 	return (
 		<main>
@@ -65,6 +73,85 @@ export default function EditInvoiceForm({
 							cols={100}
 							className="w-full resize"
 						/>
+					</div>
+
+					{/* Parts Order Table*/}
+					<div className="flex flex-col gap-4 w-full md:flex-row md:gap-8">
+						<div className="w-2/12 mb-4">
+							<label
+								htmlFor="partStore"
+								className="mb-2 block text-sm font-medium"
+							>
+								Part Store
+							</label>
+							<input
+								id="partStore"
+								type="text"
+								placeholder="Enter Store"
+								defaultValue={partsOrder.partStore || ""}
+								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
+							/>
+						</div>
+						<div className="w-2/12 mb-4">
+							<label
+								htmlFor="partNumber"
+								className="mb-2 block text-sm font-medium"
+							>
+								Part Number
+							</label>
+							<input
+								id="partNumber"
+								type="text"
+								placeholder="Enter part number"
+								defaultValue={partsOrder.skuNumber || ""}
+								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
+							/>
+						</div>
+						<div className="w-3/12 mb-4">
+							<label
+								htmlFor="partDescription"
+								className="mb-2 block text-sm font-medium"
+							>
+								Part Description
+							</label>
+							<input
+								id="partDescription"
+								type="text"
+								placeholder="Enter description"
+								defaultValue={partsOrder.description || ""}
+								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
+							/>
+						</div>
+						<div className="mb-4 w-1/12">
+							<label
+								htmlFor="partQuantity"
+								className="mb-2 block text-sm font-medium"
+							>
+								Quantity
+							</label>
+							<input
+								id="partQuantity"
+								type="number"
+								placeholder="Enter quantity"
+								defaultValue={partsOrder.quantity || ""}
+								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
+							/>
+						</div>
+						<div className="w-1/12 mb-4">
+							<label
+								htmlFor="partListPrice"
+								className="mb-2 block text-sm font-medium"
+							>
+								Price
+							</label>
+							<input
+								id="partListPrice"
+								type="text"
+								placeholder="Enter List Price"
+								value={formattedPrice || ""}
+								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
+							/>
+						</div>
 					</div>
 
 					{/* Invoice Payment Type */}
@@ -228,8 +315,7 @@ export default function EditInvoiceForm({
 					</div> */}
 					</fieldset>
 
-					{/* Parts Order List */}
-					<PartsOrder id={invoice.partsId} />
+					{/* <PartsOrder id={invoice.partsId} /> */}
 					<div className="mt-6 flex justify-end gap-4">
 						<Link
 							href="/dashboard/invoices"
