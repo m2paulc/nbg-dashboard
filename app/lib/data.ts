@@ -13,7 +13,6 @@ export async function fetchAllInvoices() {
 			include: {
 				customerIden: true,
 				customerCar: true,
-				partsOrder: true,
 			},
 		});
 	} catch (error) {
@@ -49,7 +48,7 @@ export async function fetchFilteredInvoices(query: string) {
 			where: {
 				OR: [
 					{ serviceRequest: { contains: query, mode: "insensitive" } },
-					{ LaborDescription: { contains: query, mode: "insensitive" } },
+					{ laborDescription: { contains: query, mode: "insensitive" } },
 					whereDate,
 					whereStatus,
 					{
@@ -99,7 +98,7 @@ export async function fetchFilteredInvoices(query: string) {
 			invoiceNumber: invoice.invoiceNumber,
 			name: `${invoice.customerIden.customerFirstName} ${invoice.customerIden.customerLastName}`,
 			service: invoice.serviceRequest,
-			laborDesc: invoice.LaborDescription,
+			laborDesc: invoice.laborDescription,
 			date: formatDatetoLocal(invoice.invoiceDate),
 			amount: formatCurrency(invoice.invoiceTotalInCents),
 			status: invoice.status,
@@ -222,7 +221,7 @@ export async function fetchInvoicesPages(query: string) {
 					},
 					// { status: { equals: statusQ } },
 					// { invoiceDate: { gte: formattedDate } },
-					{ LaborDescription: { contains: query, mode: "insensitive" } },
+					{ laborDescription: { contains: query, mode: "insensitive" } },
 					{
 						customerCar: {
 							carLicensePlate: { contains: query, mode: "insensitive" },
@@ -302,5 +301,132 @@ export async function fetchVehicles() {
 	} catch (error) {
 		console.error("Database Error: ", error);
 		throw new Error("Failed to fetch all vehicles.");
+	}
+}
+
+export async function fetchInvoiceById(id: string) {
+	noStore();
+
+	try {
+		const invoice = await prisma.invoices.findUnique({
+			select: {
+				invoiceId: true,
+				invoiceDate: true,
+				customerIdenId: true,
+				invoiceNumber: true,
+				serviceRequest: true,
+				customerCarId: true,
+				partsId: true,
+				laborDescription: true,
+				laborHours: true,
+				invoiceTotalInCents: true,
+				paymentType: true,
+				status: true,
+			},
+			where: { invoiceId: id },
+		});
+		console.log(invoice);
+		return invoice;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch invoice by id.");
+	}
+}
+
+export async function fetchCustomerById(id: string) {
+	noStore();
+	try {
+		const customer = await prisma.customers.findUnique({
+			select: {
+				customerLastName: true,
+				customerFirstName: true,
+			},
+			where: { customerId: id },
+		});
+		console.log(customer);
+		return customer;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch customer by id.");
+	}
+}
+
+export async function fetchCustomerCarsById(id: string) {
+	noStore();
+
+	try {
+		const vehicle = await prisma.cars.findUnique({
+			select: {
+				carMake: true,
+				carModel: true,
+				carYear: true,
+				carLicensePlate: true,
+				carVIN: true,
+			},
+			where: { carId: id },
+		});
+		console.log(vehicle);
+		return vehicle;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch customer cars by id.");
+	}
+}
+
+export async function fetchPartsOrderById(id: string) {
+	noStore();
+
+	try {
+		const partsOrder = await prisma.partsOrderEntry.findUnique({
+			select: {
+				partsOrderEntryId: true,
+				partStore: true,
+				skuNumber: true,
+				description: true,
+				quantity: true,
+				listPriceInCents: true,
+				costPriceInCents: true,
+			},
+			where: { partsOrderEntryId: id },
+		});
+		console.log("Parts: ", partsOrder);
+		return partsOrder;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch parts order by id.");
+	}
+}
+
+export async function fetchPartsOrders() {
+	noStore();
+
+	try {
+		const data = await prisma.partsOrderEntry.findMany({
+			orderBy: { partsOrderEntryId: "asc" },
+		});
+		console.log(data);
+		return data;
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to fetch parts orders.");
+	}
+}
+
+export async function updateInvoiceParts() {
+	noStore();
+
+	try {
+		const updatedData = await prisma.invoices.update({
+			where: {
+				invoiceId: "45419208-596d-4eec-9e41-fd2d5dcda0f1",
+			},
+			data: {
+				partsId: "clw758mam00014dotxhbzwmcy",
+			},
+		});
+		console.log(updatedData);
+	} catch (error) {
+		console.error("Database Error: ", error);
+		throw new Error("Failed to update invoice parts.");
 	}
 }

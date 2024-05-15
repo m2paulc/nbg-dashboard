@@ -76,32 +76,46 @@ async function main() {
 	// 		totalPriceInCents: 10000,
 	// 	},
 	// });
-	const johnInvoice = await prisma.invoices.create({
+	// const johnInvoice = await prisma.invoices.create({
+	// 	data: {
+	// 		invoiceDate: new Date(),
+	// 		customerIdenId: "clvvogxqs0000yujy5m4k9h4x",
+	// 		customerCarId: "clvwk59mv000112ntpvy49qy7",
+	// 		serviceRequest: "Oil Change and Tire Rotation",
+	// 		partsOrderId: "clvwncix10001707g7ntn2pw8",
+	// 		extededPriceinCents: 10000,
+	// 		commercialPriceInCents: 9000,
+	// 		differencePriceInCents: 1000,
+	// 		differenceTotalInCents: 1000,
+	// 		LaborHourlyRateInCents: 5000,
+	// 		LaborDescription: "Oil Change and Tire Rotation",
+	// 		LaborHours: 2,
+	// 		LaborTotalCostInCents: 10000,
+	// 		invoiceDiscountInCents: 0,
+	// 		taxInPercentage: 0.08,
+	// 		taxInCents: 800,
+	// 		subTotalInCents: 21000,
+	// 		invoiceTotalInCents: 22000,
+	// 		amountPaidInCents: 0,
+	// 		balanceDueInCents: 22000,
+	// 		paymentType: "CASH",
+	// 	},
+	// });
+	// console.log({ johnInvoice });
+
+	const parts = await prisma.partsOrderEntry.create({
 		data: {
-			invoiceDate: new Date(),
-			customerIdenId: "clvvogxqs0000yujy5m4k9h4x",
-			customerCarId: "clvwk59mv000112ntpvy49qy7",
-			serviceRequest: "Oil Change and Tire Rotation",
-			partsOrderId: "clvwncix10001707g7ntn2pw8",
-			extededPriceinCents: 10000,
-			commercialPriceInCents: 9000,
-			differencePriceInCents: 1000,
-			differenceTotalInCents: 1000,
-			LaborHourlyRateInCents: 5000,
-			LaborDescription: "Oil Change and Tire Rotation",
-			LaborHours: 2,
-			LaborTotalCostInCents: 10000,
-			invoiceDiscountInCents: 0,
-			taxInPercentage: 0.08,
-			taxInCents: 800,
-			subTotalInCents: 21000,
-			invoiceTotalInCents: 22000,
-			amountPaidInCents: 0,
-			balanceDueInCents: 22000,
-			paymentType: "CASH",
+			partStore: "Auto Parts",
+			skuNumber: "PA-00004567890",
+			description: "Oil Filter",
+			listPriceInCents: 2500,
+			costPriceInCents: 2000,
+			quantity: 1,
+			totalPriceInCents: 2500,
+			invoiceId: "45419208-596d-4eec-9e41-fd2d5dcda0f1",
 		},
 	});
-	console.log({ johnInvoice });
+	console.log({ parts });
 }
 
 main()

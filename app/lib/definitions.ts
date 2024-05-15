@@ -1,20 +1,20 @@
-export type Invoice = {
-	invoiceId: string;
-	customerId: string;
-	customerLastName: string;
-	customerFirstName: string;
-	serviceRequest: string;
-	carId: string;
-	date: string;
-	amount: number;
-	paymentType:
-		| "CASH"
-		| "CHECK"
-		| "CREDIT_CARD"
-		| "DEBIT_CARD"
-		| "COMPANY_ACCOUNT";
-	status: "PENDING" | "PAID" | "CANCELED";
-};
+// export type Invoice = {
+// 	invoiceId: string;
+// 	customerId: string;
+// 	customerLastName: string;
+// 	customerFirstName: string;
+// 	serviceRequest: string;
+// 	carId: string;
+// 	date: string;
+// 	amount: number;
+// 	paymentType:
+// 		| "CASH"
+// 		| "CHECK"
+// 		| "CREDIT_CARD"
+// 		| "DEBIT_CARD"
+// 		| "COMPANY_ACCOUNT";
+// 	status: "PENDING" | "PAID" | "CANCELED";
+// };
 
 export type LatestInvoicesType = {
 	invoiceNumber: string;
@@ -27,6 +27,39 @@ export type LatestInvoicesType = {
 	customerIden: Customer;
 	customerCarId: string;
 	customerCar: Car;
+};
+
+export type InvoiceForm = {
+	invoiceId: string;
+	invoiceDate: Date;
+	customerId: string;
+	invoiceNumber: string;
+	serviceRequest: string;
+	customerCarId: string;
+	partsId: string;
+	laborDescription: string;
+	laborHours: number;
+	invoiceDiscountInCents?: number;
+	paymentType:
+		| "CASH"
+		| "CHECK"
+		| "CREDIT_CARD"
+		| "DEBIT_CARD"
+		| "COMPANY_ACCOUNT";
+	status: "PENDING" | "PAID" | "CANCELED";
+};
+
+export type CustomerForm = {
+	customerLastName: string;
+	customerFirstName: string;
+};
+
+export type VehicleForm = {
+	carMake: string;
+	carModel: string;
+	carYear: number;
+	carLicensePlate: string;
+	carVIN: string;
 };
 
 export type Customer = {

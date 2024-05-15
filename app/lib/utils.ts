@@ -1,6 +1,10 @@
 import { statusType } from "@prisma/client";
 
 export const formatCurrency = (amount: number) => {
+	console.log("formatCurrency", amount);
+	if (!amount) {
+		return "$0.00";
+	}
 	return (amount / 100).toLocaleString("en-US", {
 		style: "currency",
 		currency: "USD",
@@ -9,6 +13,14 @@ export const formatCurrency = (amount: number) => {
 
 export const formatDatetoLocal = (date: Date) => {
 	return date.toLocaleDateString("en-US");
+};
+
+export const formatDatetoLocalString = (date: Date) => {
+	return date.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+	});
 };
 
 export const checkStatus = (q: string): statusType => {
