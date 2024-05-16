@@ -21,9 +21,14 @@ import {
 import { formatCurrency, formatDatetoLocalString } from "@/app/lib/utils";
 import { updateInvoice } from "@/app/lib/actions";
 import { useEffect, useState } from "react";
-import { inter } from "../fonts";
+import clsx from "clsx";
 
 interface PaymentTypeOption {
+	option: string;
+	icon: JSX.Element;
+}
+
+interface StatusType {
 	option: string;
 	icon: JSX.Element;
 }
@@ -44,6 +49,8 @@ export default function EditInvoiceForm({
 
 	const [paymentOptions, setPaymentOptions] = useState<PaymentTypeOption[]>([]);
 	const [selectedPaymentOption, setSelectedPaymentOption] = useState("");
+	const [statuses, setStatuses] = useState<StatusType[]>([]);
+	const [selectedStatus, setSelectedStatus] = useState("");
 
 	useEffect(() => {
 		const options: PaymentTypeOption[] = [
@@ -57,6 +64,13 @@ export default function EditInvoiceForm({
 			},
 		];
 		setPaymentOptions(options);
+
+		const statusOptions: StatusType[] = [
+			{ option: "PENDING", icon: <ClockIcon className="w-5 h-5" /> },
+			{ option: "PAID", icon: <CheckCircleIcon className="w-5 h-5" /> },
+			{ option: "CANCELED", icon: <NoSymbolIcon className="w-5 h-5" /> },
+		];
+		setStatuses(statusOptions);
 	}, []);
 
 	useEffect(() => {
@@ -66,6 +80,14 @@ export default function EditInvoiceForm({
 			}
 		});
 	}, [invoice.paymentType, paymentOptions]);
+
+	useEffect(() => {
+		statuses.forEach((status) => {
+			if (status.option === invoice.status) {
+				setSelectedStatus(status.option);
+			}
+		});
+	}, [statuses, invoice.status]);
 
 	console.log(invoice.paymentType);
 	return (
@@ -225,7 +247,34 @@ export default function EditInvoiceForm({
 						</legend>
 						<div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
 							<div className="flex gap-4">
-								<div className="flex items-center">
+								{statuses.map((status) => (
+									<div key={status.option} className="flex items-center">
+										<input
+											id={status.option.toLowerCase()}
+											name={status.option.toLowerCase()}
+											type="radio"
+											defaultValue={status.option}
+											checked={selectedStatus === status.option}
+											onChange={() => setSelectedStatus(status.option)}
+											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+											aria-describedby="status-error"
+										/>
+										<label
+											htmlFor={status.option.toLowerCase()}
+											className={clsx(
+												"ml-2 flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-white",
+												{
+													"bg-orange-500": status.option === "PENDING",
+													"bg-green-500": status.option === "PAID",
+													"bg-red-500": status.option === "CANCELED",
+												}
+											)}
+										>
+											{status.option} {status.icon}
+										</label>
+									</div>
+								))}
+								{/* <div className="flex items-center">
 									<input
 										id="pending"
 										name="status"
@@ -272,7 +321,7 @@ export default function EditInvoiceForm({
 									>
 										Canceled <NoSymbolIcon className="h-4 w-4" />
 									</label>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						{/* <div id="status-error" aria-live="polite" aria-atomic="true">
