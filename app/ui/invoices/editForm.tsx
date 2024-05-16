@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import { Button } from "@/app/ui/button";
 import {
-	CheckIcon,
 	ClockIcon,
 	CurrencyDollarIcon,
 	UserCircleIcon,
@@ -251,7 +250,8 @@ export default function EditInvoiceForm({
 									<div key={status.option} className="flex items-center">
 										<input
 											id={status.option.toLowerCase()}
-											name={status.option.toLowerCase()}
+											title={status.option}
+											name="status"
 											type="radio"
 											defaultValue={status.option}
 											checked={selectedStatus === status.option}
@@ -274,54 +274,6 @@ export default function EditInvoiceForm({
 										</label>
 									</div>
 								))}
-								{/* <div className="flex items-center">
-									<input
-										id="pending"
-										name="status"
-										type="radio"
-										value="PENDING"
-										className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										aria-describedby="status-error"
-									/>
-									<label
-										htmlFor="pending"
-										className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-orange-400 px-3 py-1.5 text-xs font-medium text-white"
-									>
-										Pending <ClockIcon className="h-4 w-4" />
-									</label>
-								</div>
-								<div className="flex items-center">
-									<input
-										id="paid"
-										name="status"
-										type="radio"
-										value="PAID"
-										className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										aria-describedby="status-error"
-									/>
-									<label
-										htmlFor="paid"
-										className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
-									>
-										Paid <CheckIcon className="h-4 w-4" />
-									</label>
-								</div>
-								<div className="flex items-center">
-									<input
-										id="canceled"
-										name="status"
-										type="radio"
-										value="CANCELED"
-										className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										aria-describedby="status-error"
-									/>
-									<label
-										htmlFor="canceled"
-										className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white"
-									>
-										Canceled <NoSymbolIcon className="h-4 w-4" />
-									</label>
-								</div> */}
 							</div>
 						</div>
 						{/* <div id="status-error" aria-live="polite" aria-atomic="true">
