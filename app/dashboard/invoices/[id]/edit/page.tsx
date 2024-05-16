@@ -10,9 +10,9 @@ import {
 async function Page({ params }: { params: { id: string } }) {
 	const id = params.id;
 	const invoice = await fetchInvoiceById(id);
-	const customer = await fetchCustomerById(invoice!.customerIdenId);
-	const vehicle = await fetchCustomerCarsById(invoice!.customerCarId);
-	const partsOrder = (await fetchPartsOrderById(id)) || {
+	const customer = await fetchCustomerById(invoice!.customerIdenId!);
+	const vehicle = await fetchCustomerCarsById(invoice!.customerCarId!);
+	const partsOrder = (await fetchPartsOrderById(invoice!.partsId!)) || {
 		partStore: "",
 		skuNumber: "",
 		description: "",

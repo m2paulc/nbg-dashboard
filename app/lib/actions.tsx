@@ -30,7 +30,6 @@ const UpdateInvoice = FormSchema.omit({
 	customerId: true,
 	carId: true,
 	status: true,
-	paymentType: true,
 	amount: true,
 });
 
@@ -98,8 +97,9 @@ export async function updateInvoice(
 	// prevState: State,
 	formData: FormData
 ) {
-	const { service } = UpdateInvoice.parse({
+	const { service, paymentType } = UpdateInvoice.parse({
 		service: formData.get("service"),
+		paymentType: formData.get("paymentType"),
 	});
 	// const validateFields = UpdateInvoice.safeParse({
 	// 	amount: formData.get("amount"),
@@ -122,6 +122,7 @@ export async function updateInvoice(
 			where: { invoiceId: id },
 			data: {
 				serviceRequest: service,
+				paymentType: paymentType,
 			},
 		});
 	} catch (error) {

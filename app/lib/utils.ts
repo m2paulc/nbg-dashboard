@@ -1,7 +1,6 @@
 import { statusType } from "@prisma/client";
 
 export const formatCurrency = (amount: number) => {
-	console.log("formatCurrency", amount);
 	if (!amount) {
 		return "$0.00";
 	}

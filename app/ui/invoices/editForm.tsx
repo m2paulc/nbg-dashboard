@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import Link from "next/link";
 import { useFormState } from "react-dom";
@@ -21,8 +21,14 @@ import {
 	VehicleForm,
 } from "@/app/lib/definitions";
 import { formatCurrency, formatDatetoLocalString } from "@/app/lib/utils";
-import PartsOrder from "@/app/ui/parts";
 import { updateInvoice } from "@/app/lib/actions";
+import { useEffect, useState } from "react";
+import { inter } from "../fonts";
+
+interface PaymentTypeOption {
+	option: string;
+	icon: JSX.Element;
+}
 
 export default function EditInvoiceForm({
 	invoice,
@@ -38,6 +44,32 @@ export default function EditInvoiceForm({
 	const updateInvoiceWithId = updateInvoice.bind(null, invoice.invoiceId);
 	const formattedPrice = formatCurrency(Number(partsOrder.listPriceInCents));
 
+	const [paymentOptions, setPaymentOptions] = useState<PaymentTypeOption[]>([]);
+	const [selectedPaymentOption, setSelectedPaymentOption] = useState("");
+
+	useEffect(() => {
+		const options: PaymentTypeOption[] = [
+			{ option: "CASH", icon: <CurrencyDollarIcon className="w-5 h-5" /> },
+			{ option: "CHECK", icon: <CheckIcon className="w-5 h-5" /> },
+			{ option: "CREDIT_CARD", icon: <CreditCardIcon className="w-5 h-5" /> },
+			{ option: "DEBIT_CARD", icon: <CreditCardIcon className="w-5 h-5" /> },
+			{
+				option: "COMPANY_ACCOUNT",
+				icon: <UserCircleIcon className="w-5 h-5" />,
+			},
+		];
+		setPaymentOptions(options);
+	}, []);
+
+	useEffect(() => {
+		paymentOptions.forEach((paymentOption) => {
+			if (paymentOption.option === invoice.paymentType) {
+				setSelectedPaymentOption(paymentOption.option);
+			}
+		});
+	}, [invoice.paymentType, paymentOptions]);
+
+	console.log(invoice.paymentType);
 	return (
 		<main>
 			<div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -77,7 +109,7 @@ export default function EditInvoiceForm({
 
 					{/* Parts Order Table*/}
 					<div className="flex flex-col gap-4 w-full md:flex-row md:gap-8">
-						<div className="w-2/12 mb-4">
+						<div className="md:w-2/12 mb-4">
 							<label
 								htmlFor="partStore"
 								className="mb-2 block text-sm font-medium"
@@ -92,7 +124,7 @@ export default function EditInvoiceForm({
 								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
 							/>
 						</div>
-						<div className="w-2/12 mb-4">
+						<div className="md:w-2/12 mb-4">
 							<label
 								htmlFor="partNumber"
 								className="mb-2 block text-sm font-medium"
@@ -107,7 +139,7 @@ export default function EditInvoiceForm({
 								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
 							/>
 						</div>
-						<div className="w-3/12 mb-4">
+						<div className="md:w-3/12 mb-4">
 							<label
 								htmlFor="partDescription"
 								className="mb-2 block text-sm font-medium"
@@ -122,7 +154,7 @@ export default function EditInvoiceForm({
 								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
 							/>
 						</div>
-						<div className="mb-4 w-1/12">
+						<div className="mb-4 md:w-1/12">
 							<label
 								htmlFor="partQuantity"
 								className="mb-2 block text-sm font-medium"
@@ -137,7 +169,7 @@ export default function EditInvoiceForm({
 								className="w-full block cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500"
 							/>
 						</div>
-						<div className="w-1/12 mb-4">
+						<div className="md:w-1/12 mb-4">
 							<label
 								htmlFor="partListPrice"
 								className="mb-2 block text-sm font-medium"
@@ -160,89 +192,30 @@ export default function EditInvoiceForm({
 							<legend className="mb-2 block text-sm font-medium">
 								Choose Payment Type
 							</legend>
-							<div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-								<div className="flex gap-4">
-									<div className="flex items-center">
+							<div className="flex flex-col md:flex-row gap-4 rounded-md border border-gray-200 bg-white p-4 outline-2">
+								{paymentOptions.map((paymentOption) => (
+									<div key={paymentOption.option} className="flex items-center">
 										<input
-											id="cash"
+											id={paymentOption.option.toLowerCase()}
+											title={paymentOption.option}
 											name="paymentType"
 											type="radio"
-											value="CASH"
+											defaultValue={paymentOption.option}
+											checked={selectedPaymentOption === paymentOption.option}
+											onChange={() =>
+												setSelectedPaymentOption(paymentOption.option)
+											}
 											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
 										/>
 										<label
-											htmlFor="cash"
+											htmlFor={paymentOption.option.toLowerCase()}
 											className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-400 px-3 py-1.5 text-xs font-medium text-black"
 										>
-											<CurrencyDollarIcon className="h-4 w-4" />
-											Cash
+											{paymentOption.icon}
+											{paymentOption.option}
 										</label>
 									</div>
-									<div className="flex items-center">
-										<input
-											id="credit"
-											name="paymentType"
-											type="radio"
-											value="CREDIT_CARD"
-											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										/>
-										<label
-											htmlFor="credit"
-											className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-400 px-3 py-1.5 text-xs font-medium text-black"
-										>
-											<CreditCardIcon className="h-4 w-4" />
-											Credit Card
-										</label>
-									</div>
-									<div className="flex items-center">
-										<input
-											id="check"
-											name="paymentType"
-											type="radio"
-											value="CHECK"
-											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										/>
-										<label
-											htmlFor="check"
-											className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-400 px-3 py-1.5 text-xs font-medium text-black"
-										>
-											<CheckCircleIcon className="h-4 w-4" />
-											Check
-										</label>
-									</div>
-									<div className="flex items-center">
-										<input
-											id="debit"
-											name="paymentType"
-											type="radio"
-											value="DEBIT_CARD"
-											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										/>
-										<label
-											htmlFor="debit"
-											className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-400 px-3 py-1.5 text-xs font-medium text-black"
-										>
-											<CreditCardIcon className="h-4 w-4" />
-											Debit Card
-										</label>
-									</div>
-									<div className="flex items-center">
-										<input
-											id="company"
-											name="paymentType"
-											type="radio"
-											value="COMPANY_ACCOUNT"
-											className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-										/>
-										<label
-											htmlFor="company"
-											className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-400 px-3 py-1.5 text-xs font-medium text-black"
-										>
-											<UserCircleIcon className="h-4 w-4" />
-											Company Account
-										</label>
-									</div>
-								</div>
+								))}
 							</div>
 						</fieldset>
 					</div>
@@ -260,7 +233,6 @@ export default function EditInvoiceForm({
 										name="status"
 										type="radio"
 										value="PENDING"
-										defaultChecked
 										className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
 										aria-describedby="status-error"
 									/>
