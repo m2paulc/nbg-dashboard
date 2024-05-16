@@ -8,8 +8,6 @@ import {
 	ClockIcon,
 	CurrencyDollarIcon,
 	UserCircleIcon,
-	MagnifyingGlassIcon,
-	CameraIcon,
 	CreditCardIcon,
 	NoSymbolIcon,
 	CheckCircleIcon,
@@ -50,7 +48,7 @@ export default function EditInvoiceForm({
 	useEffect(() => {
 		const options: PaymentTypeOption[] = [
 			{ option: "CASH", icon: <CurrencyDollarIcon className="w-5 h-5" /> },
-			{ option: "CHECK", icon: <CheckIcon className="w-5 h-5" /> },
+			{ option: "CHECK", icon: <CheckCircleIcon className="w-5 h-5" /> },
 			{ option: "CREDIT_CARD", icon: <CreditCardIcon className="w-5 h-5" /> },
 			{ option: "DEBIT_CARD", icon: <CreditCardIcon className="w-5 h-5" /> },
 			{
